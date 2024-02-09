@@ -1,4 +1,4 @@
-# Matbuilder [https://projet.liris.cnrs.fr/matbuilder/matbuilder2022.pdf](Paulin2022) OSSolver
+# Matbuilder [Paulin2022](https://projet.liris.cnrs.fr/matbuilder/matbuilder2022.pdf) OSSolver
 
 Matbuilder implementation that support any solvers, including open source ones. 
 
