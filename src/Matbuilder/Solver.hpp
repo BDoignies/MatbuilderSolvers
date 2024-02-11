@@ -12,23 +12,29 @@
 class Solver
 {
 public:
-    Solver(Backend* backend) : backend(backend) { setSeed(std::random_device{}(), 0); }
+    struct SolverParams
+    {
+        int backtrackMax;
+        int greedyFailMax;
 
-    void setRandomObjective(bool rand) { randomObjective = rand; }
-    void setSeed(uint64_t seed, uint32_t burnIn) { rng.seed(seed); rng.discard(burnIn); }
+        std::mt19937 rng;
+        bool randomObjective;
+    };
+
+    Solver(const SolverParams& params, Backend* backend) :
+        params(params), backend(backend) 
+    { }
 
     ILP GetILP(const MatbuilderProgram& program, const std::vector<GFMatrix>& matrices, int m);
 
     std::vector<GFMatrix> solve(const MatbuilderProgram& program);
+
 protected:
-    int  backtrackMax = 100;
-    int greedyFailMax = 100;
-    
-    std::mt19937 rng;
-    bool randomObjective = true;
+    SolverParams params;
+    Backend* backend;
+
 
     Exp GetRandomObjective(ILP& ilp, const std::vector<Var>& variables, int q);
 
     
-    Backend* backend;
 };

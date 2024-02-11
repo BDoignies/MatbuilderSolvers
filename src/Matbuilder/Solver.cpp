@@ -4,7 +4,7 @@ Exp Solver::GetRandomObjective(ILP& ilp, const std::vector<Var>& variables, int 
 {
     Exp obj = ilp.CreateOperation();
 
-    if (!randomObjective) return obj;
+    if (!params.randomObjective) return obj;
 
     std::uniform_int_distribution<int> dist(0, q - 1);
     for (unsigned int i = 0; i < variables.size(); i++)
@@ -15,7 +15,7 @@ Exp Solver::GetRandomObjective(ILP& ilp, const std::vector<Var>& variables, int 
         //      st A - B <= X'
         //         B - A <= X'  
 
-        int c = dist(rng);
+        int c = dist(params.rng);
 
         Var xp = ilp.CreateVariable("O");
         obj = obj + xp;
@@ -38,9 +38,12 @@ ILP Solver::GetILP(const MatbuilderProgram& program, const std::vector<GFMatrix>
     const std::vector<Var> variables = ilp.CreateVariables("x", m * program.s, 0, gf.q - 1);
     for (const auto& constraint : program.constraints)
         constraint->Apply(matrices, gf, m, ilp, variables.data(), obj);
-    
-    obj = (program.s * program.m * (program.p - 1)) * obj;
-    
+
+    // According to paper
+    // obj = (program.s * program.m * (program.p - 1)) * obj;
+    // According to code (often, 1000 >> s * m * p - 1)
+    obj = 1000 * obj;
+
     int minWeight = 1;
     for (unsigned int i = 0; i < program.constraints.size(); i++)
     {
@@ -50,27 +53,25 @@ ILP Solver::GetILP(const MatbuilderProgram& program, const std::vector<GFMatrix>
         }
     }
 
-    ilp.SetObjective(GetRandomObjective(ilp, variables, program.p));
+    ilp.SetObjective(obj + GetRandomObjective(ilp, variables, program.p));
 
     return ilp;
 }
 
 std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
 {
-
     std::vector<GFMatrix> result;
 
     bool failed = true;
     int greedyFails = 0;
     
-    while (failed && greedyFails < greedyFailMax)
+    while (failed && greedyFails < params.greedyFailMax)
     {
         result = std::vector<GFMatrix>(program.s, GFMatrix(program.m));
-
+        
+        int backtrackCounts = 0;
         for (int m = 1; m <= program.m; m++)
         {
-            int backtrackCounts = 0;
-
             ILP ilp = GetILP(program, result, m);
             auto values = backend->SolveILP(ilp);
 
@@ -78,13 +79,14 @@ std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
             if (values.size() == 0)
             {
                 backtrackCounts ++;
-                if (backtrackCounts > backtrackMax) 
+                if (backtrackCounts > params.backtrackMax) 
                 {
+                    backtrackCounts = 0;
                     greedyFails ++;
                     break;
                 }
                 
-                        if (m >= 3) m -= 2;
+                     if (m >= 3) m -= 2;
                 else if (m == 2) m  = 0;
                 else if (m == 1) m  = 0;
         

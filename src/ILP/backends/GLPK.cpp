@@ -3,6 +3,7 @@
 #include <glpk.h>
 #include <cmath>
 
+// http://most.ccib.rutgers.edu/glpk.pdf
 std::vector<int> GLPKBackend::SolveILP(const ILP& ilp) const
 {
     const auto& constraints = ilp.GetConstraints();
@@ -72,9 +73,12 @@ std::vector<int> GLPKBackend::SolveILP(const ILP& ilp) const
         glp_set_obj_coef(lp, coeffs.first + 1, coeffs.second);
 
     glp_iocp parm;
-    glp_init_iocp(&parm); parm.presolve = GLP_ON;
+    glp_init_iocp(&parm); 
+    parm.presolve = GLP_ON;
+    parm.msg_lev = GLP_MSG_ERR;
+    parm.tol_obj = params.tol;
+    parm.tm_lim = static_cast<int>(to * 1000);
 
-    glp_write_lp(lp, {}, ("problem" + std::to_string(vNames.size()) + ".lp").c_str());
     int err = glp_intopt(lp, &parm);
     
     if (err != 0) return {};

@@ -78,9 +78,8 @@ MatbuilderProgram Parser::Parse(const std::string& filename) const
         else
         {
             Constraint::Modifier modifier;
-            std::string token;
-
-            token = get_next_token(tmp);
+            std::string token = get_next_token(tmp);
+            
             if (token.rfind("weak") == 0)
             {
                 modifier.weak = true;
@@ -140,6 +139,6 @@ MatbuilderProgram Parser::Parse(const std::string& filename) const
             );
         }
     }
-    program.is_valid = true;
+    program.is_valid = (program.s >= 1) && (program.m > 0) && (program.p > 1);
     return program;
 }
