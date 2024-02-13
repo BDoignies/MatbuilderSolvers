@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     bool no_seed = false;
     app.add_flag("--no-seed", no_seed, "Disables seed objective in optimizer");
     std::string format;
-    app.add_flag("--format", format, "Output format (LP/MPS)")->default_val("LP");
+    app.add_option("--format", format, "Output format (LP/MPS)")->default_val("LP");
 
     CLI11_PARSE(app, argc, argv);
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 
                 if (maxMat >= program.p) 
                 {
-                    std::cerr << "Error: generated matrix has negative numbers" << std::endl;
+                    std::cerr << "Error: generated matrix has numbers greater than base" << std::endl;
                     return 1;
                 }
 
@@ -107,9 +107,13 @@ int main(int argc, char** argv)
         Solver solver(sParams, nullptr);
         auto ilp = solver.GetILP(program, matrices, matrices[0].size() + 1);
 
+        std::string ilpstr;
         if (format == "MPS")
-            ilp.ToMPS(outfile);
+            ilpstr = ilp.ToMPS(outfile);
         else
-            ilp.ToLP(outfile);
+            ilpstr = ilp.ToLP(outfile);
+    
+        std::ofstream out(outfile);
+        out << ilpstr;
     }
 }

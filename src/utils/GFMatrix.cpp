@@ -99,7 +99,7 @@ GFMatrix GFMatrix::From(std::istream& iss)
     const std::vector<int> firstLine = getInts(tmpS, 0);
 
     int m = firstLine.size();
-    
+
     GFMatrix rslt(m);
     for (int i = 0; i < m; i++) rslt[0][i] = firstLine[i];
     for (int i = 1; i < m; i++)
