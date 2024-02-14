@@ -13,12 +13,12 @@ Based on the code : https://github.com/loispaulin/matbuilder
 
 Depending on the choosen solver, the building command is : 
 
-``
+```bash 
 mkdir build;
 cd build;
 cmake -DCMAKE_BUILD_TYPE=Release -DCPLEX=ON -DGLPK=ON ..
 make
-``
+```
 
 If, for example, CPLEX is not desired, the option `-DCPLEX=ON` shoudl be ommitted.
 
@@ -27,7 +27,7 @@ If, for example, CPLEX is not desired, the option `-DCPLEX=ON` shoudl be ommitte
 Each backend builds a different executable. For now, they have the same command line
 interface. It is the same interface as [https://github.com/loispaulin/matbuilder](https://github.com/loispaulin/matbuilder). 
 
-`bash
+```bash
 Matbuilder Solver (GLPK)
 Usage: ./matbuilder_glpk [OPTIONS]
 
@@ -47,7 +47,7 @@ Options:
   --seed INT                  Program seed
   --no-seed                   Disables seed objective in optimizer
   --header                    Writes profile as comments at the beginning of matrix file
-`
+```
 
 The option '--check' is not yet supported...
 
@@ -58,7 +58,7 @@ Profiles can be found here : [https://github.com/loispaulin/matbuilder](https://
 If the solver you want to use does not have a C/C++ interface, you can use the expand tool. It
 can be used to output the implied linear program to MPS or LP file. 
 
-`bash
+```bash
 Matbuilder ILP export
 Usage: ./matbuilder_expand [OPTIONS]
 
@@ -70,7 +70,7 @@ Options:
   --seed INT                  Program seed
   --no-seed                   Disables seed objective in optimizer
   --format TEXT=LP            Output format (LP/MPS) 
-`
+```
 
 The -m file expect the already solved matrices, without comments. The unknown
 coefficient are the variables named x_{0} to x_{m * s} (in the order of dimension, 
