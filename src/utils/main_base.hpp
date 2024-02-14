@@ -7,9 +7,9 @@
 #include "CLI11.hpp"
 
 template <class BackendType>
-int matbuilder_solve(int argc, char** argv)
+int matbuilder_solve(const char* backendName, int argc, char** argv)
 {
-    CLI::App app{"Matbuilder Solver (CPLEX)"};
+    CLI::App app{"Matbuilder Solver (" + std::string(backendName) + ")"};
     
     std::string filename;
     app.add_option("-i", filename, "Input file name")->required();

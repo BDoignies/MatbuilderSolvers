@@ -5,5 +5,5 @@
 
 int main(int argc, char** argv)
 {
-    matbuilder_solve<CPLEXBackend>(argc, argv);    
+    matbuilder_solve<CPLEXBackend>("CPLEX", argc, argv);    
 }

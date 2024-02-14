@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     
     if (program.is_valid)
     {
+        sParams.rng.discard(program.s * (program.m * (program.m + 1)) / 2);
         std::vector<GFMatrix> matrices;
         {
             std::ifstream matF(matFile);

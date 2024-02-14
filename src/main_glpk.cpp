@@ -3,5 +3,5 @@
 
 int main(int argc, char** argv)
 {
-    matbuilder_solve<GLPKBackend>(argc, argv);    
+    matbuilder_solve<GLPKBackend>("GLPK", argc, argv);    
 }

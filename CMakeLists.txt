@@ -28,5 +28,5 @@ IF (GLPK)
     target_link_libraries(matbuilder_glpk PRIVATE matbuilder galois++ glpk)
 ENDIF()
 
-add_executable(expand src/main_expand.cpp)
-target_link_libraries(expand PRIVATE matbuilder galois++)
+add_executable(matbuilder_expand src/main_expand.cpp)
+target_link_libraries(matbuilder_expand PRIVATE matbuilder galois++)
