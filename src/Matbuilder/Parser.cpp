@@ -47,6 +47,8 @@ MatbuilderProgram Parser::Parse(const std::string& filename) const
     {
         trim(tmp);
         if (tmp.empty()) continue;
+        if (tmp[0] == '\n') continue;
+        if (tmp[0] == '#') continue;
 
         if (program.s == 0 && tmp[0] == 's')      // Dimensions. Check for program.s to avoid conflicts with stratified
         {

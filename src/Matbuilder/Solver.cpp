@@ -1,4 +1,5 @@
 #include "Solver.hpp"
+#include <chrono>
 
 Exp Solver::GetRandomObjective(ILP& ilp, const std::vector<Var>& variables, int q)
 {
@@ -72,13 +73,17 @@ std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
         int backtrackCounts = 0;
         for (int m = 1; m <= program.m; m++)
         {
+            int percentage = 100 * ((double) m / (double) program.m);
+            std::cout << "Solving for m = " << m << " (" << percentage << "%)" << '\n';
+
             ILP ilp = GetILP(program, result, m);
-            
+            auto start = std::chrono::steady_clock::now();
             auto values = backend->SolveILP(ilp);
 
             // Backtracking needed, no solution found ! 
             if (values.size() == 0)
             {
+                std::cout << "Solution not found... Backtracking" << std::endl;
                 backtrackCounts ++;
                 if (backtrackCounts > params.backtrackMax) 
                 {
@@ -101,6 +106,9 @@ std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
                     result[k][i][m - 1] = values[i + k * m];
                 }
             }
+            auto end = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            std::cout << "=== done ===> " <<elapsed.count() << " milliseconds." << std::endl;
         }
 
         failed = false;
