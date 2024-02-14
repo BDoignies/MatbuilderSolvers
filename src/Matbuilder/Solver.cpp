@@ -68,11 +68,12 @@ std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
     while (failed && greedyFails < params.greedyFailMax)
     {
         result = std::vector<GFMatrix>(program.s, GFMatrix(program.m));
-        
+     
         int backtrackCounts = 0;
         for (int m = 1; m <= program.m; m++)
         {
             ILP ilp = GetILP(program, result, m);
+            
             auto values = backend->SolveILP(ilp);
 
             // Backtracking needed, no solution found ! 
@@ -99,7 +100,6 @@ std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
                 {
                     result[k][i][m - 1] = values[i + k * m];
                 }
-                    
             }
         }
 
@@ -108,7 +108,7 @@ std::vector<GFMatrix> Solver::solve(const MatbuilderProgram& program)
     
     if (failed)
     {
-        return {};
+        return result;
     }
 
     return result;

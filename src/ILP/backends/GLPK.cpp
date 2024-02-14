@@ -44,11 +44,11 @@ std::vector<int> GLPKBackend::SolveILP(const ILP& ilp) const
         {
         case ilp::ComparisonType::EQUAL:         glp_set_row_bnds(lp, i + 1, GLP_FX, constraints[i].rhs, constraints[i].rhs); break;
         
-        case ilp::ComparisonType::GREATER:       glp_set_row_bnds(lp, i + 1, GLP_UP, constraints[i].rhs + 1, constraints[i].rhs + 1); break;
-        case ilp::ComparisonType::GREATER_EQUAL: glp_set_row_bnds(lp, i + 1, GLP_UP, constraints[i].rhs + 0, constraints[i].rhs + 0); break;
+        case ilp::ComparisonType::GREATER:       glp_set_row_bnds(lp, i + 1, GLP_LO, constraints[i].rhs + 1, constraints[i].rhs + 1); break;
+        case ilp::ComparisonType::GREATER_EQUAL: glp_set_row_bnds(lp, i + 1, GLP_LO, constraints[i].rhs + 0, constraints[i].rhs + 0); break;
         
-        case ilp::ComparisonType::LOWER:         glp_set_row_bnds(lp, i + 1, GLP_LO, constraints[i].rhs - 1, constraints[i].rhs - 1); break;
-        case ilp::ComparisonType::LOWER_EQUAL:   glp_set_row_bnds(lp, i + 1, GLP_LO, constraints[i].rhs - 0, constraints[i].rhs - 0); break;
+        case ilp::ComparisonType::LOWER:         glp_set_row_bnds(lp, i + 1, GLP_UP, constraints[i].rhs - 1, constraints[i].rhs - 1); break;
+        case ilp::ComparisonType::LOWER_EQUAL:   glp_set_row_bnds(lp, i + 1, GLP_UP, constraints[i].rhs - 0, constraints[i].rhs - 0); break;
 
         case ilp::ComparisonType::NOT_EQUAL: 
         default:
@@ -77,12 +77,12 @@ std::vector<int> GLPKBackend::SolveILP(const ILP& ilp) const
     parm.presolve = GLP_ON;
     parm.msg_lev = GLP_MSG_ERR;
     parm.tol_obj = params.tol;
-    parm.tm_lim = static_cast<int>(to * 1000);
+    parm.tm_lim = static_cast<int>(params.to * 1000);
 
     int err = glp_intopt(lp, &parm);
     
     if (err != 0) return {};
-
+    
     std::vector<int> values(vNames.size());
 
     for (unsigned int i = 0; i < vNames.size(); i++)

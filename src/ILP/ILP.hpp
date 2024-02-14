@@ -152,7 +152,7 @@ namespace ilp
 
         void times(int32_t value)
         {
-            coefficients->times(-1);
+            coefficients->times(value);
             shift *= value;
         }
 
@@ -269,7 +269,7 @@ namespace ilp
                     {
                         std::cout << "[MPS] Constaint name too long: " << cName[j] << std::endl;
                         return "";
-                    }   
+                        }   
 
                     MPS_VAR += begin + cName[j] + std::string(10 - cName[j].size(), ' ');
                     MPS_VAR += std::to_string(coeff);
@@ -324,7 +324,7 @@ namespace ilp
             int32_t coeff = equation.coeff(i);
             if (coeff != 0)
             {
-                    if (coeff > 0 && EQ.size() != 0) EQ += " + ";
+                     if (coeff > 0 && EQ.size() != 0) EQ += " + ";
                 else if (coeff < 0) EQ += " - ";
 
                 EQ += std::to_string(std::abs(coeff)) + ' ' + vName[i];
@@ -400,6 +400,7 @@ namespace ilp
         void SetObjective(const LinearOperation<Storage>& op, bool maximize = false)
         {
             objective = *op.coefficients;
+            
             if (maximize) objective.times(-1);
         }
 
@@ -850,13 +851,13 @@ namespace ilp
     template<typename Storage>
     inline Constraint<Storage> operator<=(const Variable<Storage>& var, const LinearOperation<Storage>& op)
     {
-        return 0 <= op - var;
+        return 0 <= (op - var);
     }
 
     template<typename Storage>
     inline Constraint<Storage> operator<=(const LinearOperation<Storage>& op, const Variable<Storage>& var)
     {
-        return op - var <= 0;
+        return (op - var) <= 0;
     }
 
     template<typename Storage>

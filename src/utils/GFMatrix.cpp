@@ -16,8 +16,7 @@ int GFMatrix::determinant(const Galois::Field& gf, int override_m) const
         while (swapi < M && memory[swapi][i] == 0) swapi ++;
 
         if (swapi >= M) return 0;
-
-        if (swapi != i)
+        else if (swapi != i)
         {
             factorPermut *= -1;
             for (int k = i; k < M; k++)
@@ -29,9 +28,8 @@ int GFMatrix::determinant(const Galois::Field& gf, int override_m) const
 
         for (int j = i + 1; j < M; j++)
         {
-            if (memory[i][j] != 0)
+            if (memory[j][i] != 0)
             {
-                
                 int factor = gf.neg[
                     gf.times(
                         gf.inv[memory[i][i]], 

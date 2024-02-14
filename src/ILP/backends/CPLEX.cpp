@@ -26,7 +26,7 @@ std::vector<int> CPLEXBackend::SolveILP(const ILP& ilp) const
         IloInt low  = bounds.first;
         IloInt high = bounds.second;
         if (bounds.second == INT32_MAX) high = IloIntMax;
-         
+
         IloIntVar x(env, bounds.first, bounds.second);
         x.setName(name.c_str());
         vars.add(x);

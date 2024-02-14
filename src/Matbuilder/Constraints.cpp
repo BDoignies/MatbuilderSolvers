@@ -130,7 +130,7 @@ void constraintMk(
     ILP& ilp, const Var* variables, Exp& obj)
 {
     Exp det = ilp.CreateOperation();
-            
+
     const std::vector<int> dets = constraintMkSubdets(currentM, mats, k, gf);
     int indMat = 0; 
     int prevlines = 0;
@@ -151,17 +151,17 @@ void constraintMk(
 
     if (modifier.weak)
     {
-        Var x = ilp.CreateVariable("x");
+        Var x = ilp.CreateVariable("w", 0, 1);
         obj = obj - modifier.weakWeight * x;
         
-        if (modifier.weakWeight == 0)
+        if (modifier.weakWeight >= 0)
         {
-            ilp.AddConstraint("WZN", x <= det);
+            ilp.AddConstraint("WZN", x <= det.Clone());
             ilp.AddConstraint("WZN", det <= gf.q - 1);
         }
         else
         {
-            ilp.AddConstraint("WZN", x * gf.q >= det);
+            ilp.AddConstraint("WZN", x * gf.q >= det.Clone());
             ilp.AddConstraint("WZN", det >= 0);
         }
     }

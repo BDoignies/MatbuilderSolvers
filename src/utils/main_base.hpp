@@ -49,9 +49,9 @@ int matbuilder_solve(int argc, char** argv)
     parser.RegisterConstraint("propA'",     Constraint::Create<PropAprimeConstraint>);
     
     auto program = parser.Parse(filename);
-    if (s        < 0) program.s = s;
-    if (b        < 0) program.p = b;
-    if (fullSize < 0) program.m = fullSize;
+    if (s        > 0) program.s = s;
+    if (b        > 0) program.p = b;
+    if (fullSize > 0) program.m = fullSize;
 
     Backend::BackendParams bParams;
     bParams.threads = nbThreads;
