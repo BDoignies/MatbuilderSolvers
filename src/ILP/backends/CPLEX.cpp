@@ -66,9 +66,11 @@ std::vector<int> CPLEXBackend::SolveILP(const ILP& ilp) const
 
     IloCplex cplex(model);
     cplex.setParam(IloCplex::Param::ParamDisplay, 0);
+    cplex.setParam(IloCplex::Param::MIP::Display, 0);
+    cplex.setParam(IloCplex::Param::MIP::Interval, 1000000);
     cplex.setParam(IloCplex::Param::Threads, params.threads);
     cplex.setParam(IloCplex::Param::MIP::Tolerances::MIPGap, params.tol);
-    cplex.setParam(IloCplex::TiLim, params.to);
+    cplex.setParam(IloCplex::Param::TimeLimit , params.to);
 
     bool success = cplex.solve();
 

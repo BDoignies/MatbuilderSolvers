@@ -74,10 +74,23 @@ int matbuilder_solve(int argc, char** argv)
     Solver solver(sParams, &backend);
     const auto matrices = solver.solve(program);
 
+    std::ofstream fileOut(outfile);
+    std::ostream* out = &std::cout;
+    if (fileOut.is_open())
+        out = &fileOut;
+
+    if (header)
+    {
+        std::string tmp;
+        std::ifstream programTmp(filename.c_str());
+        while (std::getline(programTmp, tmp)) (*out) << "# " << tmp << '\n';
+        (*out) << '\n';
+    }
+
     for (const auto& mat : matrices)
     {
-        mat.Print();
-        std::cout << std::endl;
+        mat.To(*out);
+        *out << '\n';
     }
 
     return 0;
